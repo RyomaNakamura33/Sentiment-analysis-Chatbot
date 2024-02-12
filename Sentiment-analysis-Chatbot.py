@@ -169,7 +169,7 @@ model = AutoModel.from_pretrained('/content/drive/MyDrive/Model/Trained_model')
 tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
 # システムプロンプト
-system_prompt = "あなたは友人として接してください。文章は短めで、寄り添ったことを書いてください。"
+system_prompt = "You are to be treated as a friend. Please keep your sentences short and write about what you are leaning towards."
 
 # OpenAIクライアントを初期化します。
 client = OpenAI(api_key=userdata.get('openai_api'))
