@@ -159,6 +159,7 @@ trainer.save_model('/content/drive/MyDrive/Model/Trained_model')
 from openai import OpenAI
 import ipywidgets as widgets
 from IPython.display import display, clear_output, HTML
+import json
 
 """モデルダウンロード"""
 
@@ -204,7 +205,8 @@ def analyze_emotion(text, show_fig=False, ret_prob=False):
     preds = model(**tokens)
     prob = np_softmax(preds.logits.cpu().detach().numpy()[0])
     out_dict = {n: p for n, p in zip(emotion_names_jp, prob)}
-
+    out_dict_str = json.dumps(out_dict)
+    
     # 棒グラフを描画
     if show_fig:
         plt.figure(figsize=(8, 3))
@@ -220,7 +222,11 @@ def send_to_chatbot(button):
     user_input = input_box.value
     analyze_emotion(user_input, show_fig=True)
     global past_messages
-    past_messages.append({"role": "user", "content": user_input})
+    # user_input と out_dict_str を組み合わせて新しいユーザー入力メッセージを作成
+    user_input_with_emotion = f"{user_input}\nEmotional Analysis Results: {out_dict_str}"
+
+    # 新しいユーザー入力メッセージを past_messages リストに追加する
+    past_messages.append({"role": "user", "content": user_input_with_emotion})
 
     # APIにリクエストを送信し、レスポンスを得る
     try:
